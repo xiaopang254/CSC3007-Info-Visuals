@@ -6,6 +6,7 @@
 | Low Li Pin | 2101542     |
 | Mathan S/O Nanthabala    | 2100605    |
 | Izz Danial Bin Selamat | 2100735 |
+| Neo Kah Siak | 2101960 |
 | Lau Jun Xiang | 2100582 |
 
 # Project
