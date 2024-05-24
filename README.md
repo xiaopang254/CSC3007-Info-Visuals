@@ -3,7 +3,7 @@
 | Members    | Student ID |
 | -------- | ------- |
 | Samantha Lee Qiao Yu  | 2102066    |
-| Low Li Ping | 2101542     |
+| Low Li Pin | 2101542     |
 | Mathan S/O Nanthabala    | 2100605    |
 | Izz Danial Bin Selamat | 2100735 |
 | Lau Jun Xiang | 2100582 |
