@@ -10,6 +10,6 @@
 | Lau Jun Xiang | 2100582 |
 
 # Project
-Improving visualisation from the article "Fatal road accidents up in 2023; Traffic Police to raise demerit points for some offences" by straits times.
+Improving visualisation from the article "The Big Read: To tackle rising fatal traffic accidents and worsening road culture, we need to first understand the problem" by straits times.
 
-Click [here](https://www.straitstimes.com/singapore/fatal-road-accidents-up-in-2023-many-motorists-have-irresponsible-driving-behaviours-traffic-police) to see the article!
+Click [here](https://www.channelnewsasia.com/singapore/big-read-rising-traffic-accidents-road-culture-4328841) to see the article!
