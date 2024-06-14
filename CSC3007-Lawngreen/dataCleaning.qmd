@@ -1,0 +1,48 @@
+---
+title: "dataCleaning"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(readr)
+library(dplyr)
+library(tidyverse)
+
+# File paths
+input_file_path <- "../data/original_dataset.csv"
+output_file_path <- "cleaned_data.csv"
+
+# Read the CSV file and skip the first 9 rows
+data <- read_csv(input_file_path, skip = 9)
+
+# Reassign the 10th row as column headers
+colnames(data) <- data[1,]
+data <- data[-1,]
+
+# Select rows up to row 123 (Skipped 9 rows, 121 - 9 = 112)
+data <- data[1:112,]
+
+# Save the updated data to a new CSV file
+write_csv(data, output_file_path)
+
+# Display the contents of the CSV file
+print(data)
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
