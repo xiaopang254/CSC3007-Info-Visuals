@@ -1,0 +1,123 @@
+---
+title: "Traffic-Accidents-Singapore"
+format: html
+---
+
+# Required packages
+
+```{r}
+#| label: required-packages
+#| message: false
+
+library(tidyverse)
+library(gridExtra)
+library(grid)
+```
+
+# Data Import
+
+```{r}
+#| label: data-import
+#| message: false
+
+# Import the dataset
+cleaned_dataset <- read.csv("../data/cleaned_dataset.csv")
+colnames(cleaned_dataset)
+```
+# Extract Data
+
+```{r}
+#| label: extract-data
+#| message: false
+
+# Extract data for vehicles
+vehicle_accidents <- cleaned_dataset %>% filter(Data.Series == "Injury Accidents Attributed To Vehicles")
+
+# Extract data for non-vehicles
+non_vehicle_accidents <- cleaned_dataset %>% filter(Data.Series == "Injury Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)")
+
+print(vehicle_accidents)
+print(non_vehicle_accidents)
+```
+
+# Transform Data
+
+```{r}
+#| label: transform-data
+#| message: false
+
+# Extract the years from the column names
+years <- as.numeric(sub("X", "", names(cleaned_dataset)[2:12]))
+
+vehicle_data <- tibble(
+  Year = years,
+  Accidents = as.numeric(vehicle_accidents[1, 2:12])
+)
+
+non_vehicle_data <- tibble(
+  Year = years,
+  Accidents = colSums(non_vehicle_accidents[, 2:12], na.rm = TRUE)
+)
+
+print(vehicle_data)
+print(non_vehicle_data)
+```
+
+# Create Sparklines
+
+```{r}
+#| label: create-sparklines
+#| message: false
+
+# Create sparklines for vehicle
+vehicle_sparkline <- ggplot(vehicle_data, aes(x = Year, y = Accidents)) +
+  geom_line(color = "#2F81C5") +
+  geom_point(color = "#205988") +
+  scale_x_continuous(breaks = years) +
+  scale_y_continuous(n.breaks = 8) +
+  theme_minimal() +
+  labs(
+    title = "Traffic Accidents Attributed To Vehicles", 
+    x = "Year", 
+    y = "No. of Accidents"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, margin = margin(b = 10)), 
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10))
+  )
+
+# Create sparklines for non-vehicle
+non_vehicle_sparkline <- ggplot(non_vehicle_data, aes(x = Year, y = Accidents)) +
+  geom_line(color = "#2DA5B2") +
+  geom_point(color = "#217E88") +
+  scale_x_continuous(breaks = years) +
+  scale_y_continuous(n.breaks = 8) +
+  theme_minimal() +
+  labs(
+    title = "Traffic Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)", 
+    x = "Year", 
+    y = "No. of Accidents"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, margin = margin(b = 10)), 
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10))
+  )
+
+# Combine the two plots with increased width
+combined_plot <- grid.arrange(vehicle_sparkline, non_vehicle_sparkline, ncol = 1)
+
+# Add caption
+caption <- textGrob(
+  "Source: Singapore Police Force", 
+  x = 0.95, 
+  hjust = 1, 
+  gp = gpar(fontface = "italic", fontsize = 8)
+)
+
+# Print combined plot
+grid.arrange(combined_plot, caption, nrow = 2, heights = c(10, 1))
+```
+
+
