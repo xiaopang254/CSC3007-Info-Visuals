@@ -18,7 +18,7 @@ install_and_load <- function(package) {
 }
 
 # List of required packages
-required_packages <- c("tidyverse", "gridExtra", "grid", "gt", "gtExtras", "sparkline")
+required_packages <- c("tidyverse", "gridExtra", "grid", "gt", "gtExtras", "sparkline", "patchwork", "png")
 
 # Install and load required packages
 for (pkg in required_packages) {
@@ -42,11 +42,14 @@ colnames(cleaned_dataset)
 #| label: extract-data
 #| message: false
 
-# Extract data for vehicles
-vehicle_accidents <- cleaned_dataset %>% filter(Category == "Injury Accidents Attributed To Vehicles")
+# Function to extract data
+extract_data <- function(dataset, category) {
+  dataset %>% filter(Category == category)
+}
 
-# Extract data for non-vehicles
-non_vehicle_accidents <- cleaned_dataset %>% filter(Category == "Injury Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)")
+# Use the function to extract data
+vehicle_accidents <- extract_data(cleaned_dataset, "Injury Accidents Attributed To Vehicles")
+non_vehicle_accidents <- extract_data(cleaned_dataset, "Injury Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)")
 
 print(vehicle_accidents)
 print(non_vehicle_accidents)
@@ -58,18 +61,27 @@ print(non_vehicle_accidents)
 #| label: transform-data
 #| message: false
 
+# Function to transform data
+transform_data <- function(data, years, is_vehicle = TRUE) {
+  if (is_vehicle) {
+    tibble(
+      Year = years,
+      Accidents = as.numeric(data[1, 2:12])
+    )
+  } else {
+    tibble(
+      Year = years,
+      Accidents = colSums(data[, 2:12], na.rm = TRUE)
+    )
+  }
+}
+
 # Extract the years from the column names
 years <- as.numeric(sub("X", "", names(cleaned_dataset)[2:12]))
 
-vehicle_data <- tibble(
-  Year = years,
-  Accidents = as.numeric(vehicle_accidents[1, 2:12])
-)
-
-non_vehicle_data <- tibble(
-  Year = years,
-  Accidents = colSums(non_vehicle_accidents[, 2:12], na.rm = TRUE)
-)
+# Use the function to transform data
+vehicle_data <- transform_data(vehicle_accidents, years, TRUE)
+non_vehicle_data <- transform_data(non_vehicle_accidents, years, FALSE)
 
 print(vehicle_data)
 print(non_vehicle_data)
@@ -81,11 +93,14 @@ print(non_vehicle_data)
 #| label: create-sparklines
 #| message: false
 
-# Create sparklines for vehicle
-vehicle_sparkline <- htmlwidgets::saveWidget(sparkline(vehicle_data$Accidents, type = "line"), 'vehicle_sparkline.html', selfcontained = TRUE)
+# Function to create and save sparklines
+create_sparkline <- function(data, filename) {
+  htmlwidgets::saveWidget(sparkline(data$Accidents, type = "line"), filename, selfcontained = TRUE)
+}
 
-# Create sparklines for non-vehicle
-non_vehicle_sparkline <- htmlwidgets::saveWidget(sparkline(non_vehicle_data$Accidents, type = "line"), 'non_vehicle_sparkline.html', selfcontained = TRUE)
+# Use the function to create sparklines
+create_sparkline(vehicle_data, 'vehicle_sparkline.html')
+create_sparkline(non_vehicle_data, 'non_vehicle_sparkline.html')
 ```
 
 # Plot Overview Graph
@@ -94,50 +109,44 @@ non_vehicle_sparkline <- htmlwidgets::saveWidget(sparkline(non_vehicle_data$Acci
 #| label: plot-overview-graph
 #| message: false
 
-# Combine the two plots with increased width
-vehicle_plot <- ggplot(vehicle_data, aes(x = Year, y = Accidents)) +
-  geom_line(color = "#2F81C5") +
-  geom_point(color = "#205988") +
-  scale_x_continuous(breaks = years) +
-  scale_y_continuous(n.breaks = 8) +
-  theme_minimal() +
-  labs(
-    title = "Traffic Accidents Attributed To Vehicles", 
-    x = "Year", 
-    y = "No. of Accidents"
-  ) +
-  theme(
-    plot.title = element_text(hjust = 0.5, margin = margin(b = 10)), 
-    axis.title.x = element_text(margin = margin(t = 10)),
-    axis.title.y = element_text(margin = margin(r = 10))
-  )
+# Function to create plot
+create_plot <- function(data, title, line_color, point_color) {
+  ggplot(data, aes(x = Year, y = Accidents)) +
+    geom_line(color = line_color) +
+    geom_point(color = point_color) +
+    scale_x_continuous(breaks = unique(data$Year)) +
+    scale_y_continuous(n.breaks = 8) +
+    theme_minimal() +
+    labs(
+      title = title,
+      x = "Year",
+      y = "No. of Accidents",
+      caption = "Source: Singapore Police Force"
+    ) +
+    theme(
+      plot.caption = element_text(face = "italic", hjust = 1, vjust = 1),
+      plot.title = element_text(face = "bold", hjust = 0.5, margin = margin(b = 10)),
+      axis.title.x = element_text(margin = margin(t = 10)),
+      axis.title.y = element_text(margin = margin(r = 10))
+    )
+}
 
-non_vehicle_plot <- ggplot(non_vehicle_data, aes(x = Year, y = Accidents)) +
-  geom_line(color = "#2DA5B2") +
-  geom_point(color = "#217E88") +
-  scale_x_continuous(breaks = years) +
-  scale_y_continuous(n.breaks = 8) +
-  theme_minimal() +
-  labs(
-    title = "Traffic Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)", 
-    x = "Year", 
-    y = "No. of Accidents"
-  ) +
-  theme(
-    plot.title = element_text(hjust = 0.5, margin = margin(b = 10)), 
-    axis.title.x = element_text(margin = margin(t = 10)),
-    axis.title.y = element_text(margin = margin(r = 10))
-  )
+# Use the function to create plots
+vehicle_plot <- create_plot(vehicle_data, "Traffic Accidents Attributed To Vehicles", "#2F81C5", "#205988")
+non_vehicle_plot <- create_plot(non_vehicle_data, "Traffic Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)", "#2DA5B2", "#217E88")
 
-caption <- textGrob(
-  "Source: Singapore Police Force", 
-  x = 0.95, 
-  hjust = 1, 
-  gp = gpar(fontface = "italic", fontsize = 8)
-)
+# Create a spacer grob
+spacer <- nullGrob()
 
-# Combine the two plots
-combined_plot <- grid.arrange(vehicle_plot, non_vehicle_plot, ncol = 1, bottom = caption)
+# Combine the two plots side by side with spacing
+overview_plot <- grid.arrange(vehicle_plot, spacer, non_vehicle_plot, ncol = 3, widths = c(1, 0.1, 1))
+
+# Save the combined plot as an image
+ggsave("overview_plot.png", plot = overview_plot, width = 16, height = 5, dpi = 300)
+
+# Display the saved plot image
+grid::grid.newpage()
+grid::grid.raster(as.raster(png::readPNG("overview_plot.png")))
 ```
 
 
@@ -227,23 +236,32 @@ normalize_sparkline <- function(accidents) {
   (accidents - min_val) / (max_val - min_val)
 }
 
-# Create sparklines for vehicles
-sparklines_vehicles <- df_vehicles |>
-  group_by(Category) |>
-  summarise(
-    Sparkline = list(normalize_sparkline(Accidents)),
-    Min = min(Accidents, na.rm = TRUE),
-    Max = max(Accidents, na.rm = TRUE)
-  )
+# Function to create sparklines data
+create_sparkline_data <- function(df) {
+  df |>
+    group_by(Category) |>
+    summarise(
+      Sparkline = list(normalize_sparkline(Accidents)),
+      Min = min(Accidents, na.rm = TRUE),
+      Max = max(Accidents, na.rm = TRUE),
+      Start = first(Accidents),
+      End = last(Accidents),
+      OriginalValues = list(Accidents)
+    )
+}
 
-# Create sparklines for non-vehicles
-sparklines_non_vehicles <- df_non_vehicles |>
-  group_by(Category) |>
-  summarise(
-    Sparkline = list(normalize_sparkline(Accidents)),
-    Min = min(Accidents, na.rm = TRUE),
-    Max = max(Accidents, na.rm = TRUE)
-  )
+# Create sparklines data for vehicles and non-vehicles
+sparklines_vehicles <- create_sparkline_data(df_vehicles)
+sparklines_non_vehicles <- create_sparkline_data(df_non_vehicles)
+
+# Print the exact sparkline values for verification
+unnested_sparklines_vehicles <- sparklines_vehicles |>
+  unnest(cols = c(Sparkline, OriginalValues))
+print(unnested_sparklines_vehicles)
+
+unnested_sparklines_non_vehicles <- sparklines_non_vehicles |>
+  unnest(cols = c(Sparkline, OriginalValues))
+print(unnested_sparklines_non_vehicles)
 ```
 
 # Create Table
@@ -252,40 +270,76 @@ sparklines_non_vehicles <- df_non_vehicles |>
 #| label: create-table
 #| message: false
 
+# Function to create GT table with sparklines and labels
+create_gt_table <- function(data_table, category_label, spkl_palette, line_color) {
+  data_table |>
+    gt() |>
+    cols_label(
+      Category = category_label,
+      Min = "Min Accidents",
+      Max = "Max Accidents",
+      Sparkline = "2012 to 2022",
+      Sum = "Accidents"
+    ) |>
+    cols_move(c("Min", "Max"), after = "Category") |>
+    cols_move("Sum", after = "Sparkline") |>
+    gtExtras::gt_plt_sparkline(
+      Sparkline,
+      type = "shaded",
+      label = FALSE,
+      palette = spkl_palette
+    ) |>
+    text_transform(
+      locations = cells_body(columns = Sparkline),
+      fn = function(x) {
+        lapply(seq_along(x), function(i) {
+          paste0(
+            "<div style='display: flex; justify-content: space-between; color: ", line_color, ";'>",
+            "<span>", data_table$Start[i], "</span>",
+            x[i],
+            "<span>", data_table$End[i], "</span>",
+            "</div>"
+          )
+        })
+      }
+    ) |>
+    tab_style(
+      style = cell_text(size = px(10)),
+      locations = cells_body(columns = Sparkline)
+    ) |>
+    tab_style(
+      style = cell_text(weight = "bold"),
+      locations = cells_column_labels(everything())
+    ) |>
+    tab_options(
+      table.width = pct(100)
+    ) |>
+    cols_hide(columns = c(Start, End, OriginalValues))
+}
+
 # Combine summed data and sparklines for vehicles
 vehicles_table <- left_join(summed_vehicles, sparklines_vehicles, by = "Category")
 
 # Combine summed data and sparklines for non-vehicles
 non_vehicles_table <- left_join(summed_non_vehicles, sparklines_non_vehicles, by = "Category")
 
-# Create gt tables for vehicles
-vehicles_table |>
-  gt() |>
-  cols_label(
-    Category = "Vehicle Causes",
-    Min = "Min Accidents",
-    Max = "Max Accidents",
-    Sparkline = "2012 to 2022",
-    Sum = "Accidents"
-  ) |>
-  cols_move(c("Min", "Max"), after = "Category") |>
-  cols_move("Sum", after = "Sparkline") |>
-  gtExtras::gt_plt_sparkline(Sparkline, type = "shaded", label = FALSE)
+# Define sparkline palettes and line colors
+spkl_palette_vehicle <- c("#2F81C5", "#205988", "orange", "red", "lightblue")
+spkl_palette_non_vehicle <- c("#2DA5B2", "#217E88", "orange", "red", "lightblue")
 
-# Create gt tables for non-vehicles
-non_vehicles_table |>
-  gt() |>
-  cols_label(
-    Category = "Non-Vehicle Causes",
-    Min = "Min Accidents",
-    Max = "Max Accidents",
-    Sparkline = "2012 to 2022",
-    Sum = "Accidents"
-  ) |>
-  cols_move(c("Min", "Max"), after = "Category") |>
-  cols_move("Sum", after = "Sparkline") |>
-  gtExtras::gt_plt_sparkline(Sparkline, type = "shaded", label = FALSE)
+# Create GT tables
+gt_table_vehicles <- create_gt_table(vehicles_table, "Vehicle Causes", spkl_palette_vehicle, "#205988")
+gt_table_non_vehicles <- create_gt_table(non_vehicles_table, "Non-Vehicle Causes", spkl_palette_non_vehicle, "#217E88")
+
+# Save tables as images
+gtsave(gt_table_vehicles, "vehicle_table.png")
+gtsave(gt_table_non_vehicles, "non_vehicle_table.png")
+
+# Display images separately
+grid::grid.newpage()
+grid::grid.raster(as.raster(png::readPNG("vehicle_table.png")))
+
+grid::grid.newpage()
+grid::grid.raster(as.raster(png::readPNG("non_vehicle_table.png")))
 ```
-
-
 
