@@ -15,27 +15,135 @@ When you click the **Render** button a document will be generated that includes 
 ```{r}
 library(readr)
 library(dplyr)
-library(tidyverse)
 
 # File paths
 input_file_path <- "../data/original_dataset.csv"
 output_file_path <- "cleaned_data.csv"
 
-# Read the CSV file and skip the first 9 rows
-data <- read_csv(input_file_path, skip = 9)
+# Read the CSV file and skip the first 10 rows
+data <- read_csv(input_file_path, skip = 10, col_names =TRUE)
 
-# Reassign the 10th row as column headers
-colnames(data) <- data[1,]
-data <- data[-1,]
+# Convert column headers to character type
+colnames(data) <- as.character(colnames(data))
 
-# Select rows up to row 123 (Skipped 9 rows, 121 - 9 = 112)
+# Convert everything from row 1, column 2 onwards to double
+data <- data %>%
+  mutate(across(-1, as.double))
+
+# Select rows up to row 123 (Skipped 9 rows, 121 - 9 = 112) and remove original combined rows
+# original_data <- original_data[1:112,]
 data <- data[1:112,]
 
-# Save the updated data to a new CSV file
-write_csv(data, output_file_path)
+#change NA to 0
+data[is.na(data)] <- 0
 
-# Display the contents of the CSV file
-print(data)
+# removing fatal rows
+data <- data[-c(1:53),]
+
+# Extract the specific rows to combine
+veh1Rows <- data[c(2:23 , 26:34),]
+veh2Rows <- data[c(2, 8,9,11,13,14,31,32),]
+veh3Rows <- data[c(3,15,16),]
+veh4Rows <- data[c(4,30),]
+veh5Rows <- data[c(5,10,12,17,22,23,33),]
+veh6Rows <- data[c(6,7,18,26),]
+veh7Rows <- data[c(19,20,28),]
+veh8Rows <- data[c(21,27,29),]
+veh9Rows <- data[c(34),]
+
+ped1Rows <- data[c(24,25,36:45,47:55),]
+ped2Rows <- data[c(24,37,38,39,40,48,49,50,52),]
+ped3Rows <- data[c(25,36,41,44,47,51,54),]
+ped4Rows <- data[c(42,43,53),]
+ped5Rows <- data[c(45,55),]
+
+# Combine the first column as a character
+veh1FirstColumn <- "Injury Accidents Attributed To  Vehicles"
+veh2FirstColumn <- "Improper Lane and Speed Management"
+veh3FirstColumn <- "Traffic Signal Violations"
+veh4FirstColumn <- "Driving Under Influence"
+veh5FirstColumn <- "Failure to Give Way"
+veh6FirstColumn <- "Improper Vehicle Control (While in Motion)"
+veh7FirstColumn <- "Reckless and Distracted Driving"
+veh8FirstColumn <- "Improper Parking and Vehicle Control (While Stationary )"
+veh9FirstColumn <- "Other Causes Of Accidents Attributed To Vehicles"
+
+ped1FirstColumn <- "Injury Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)"
+ped2FirstColumn <- "Unsafe Crossing Behaviors"
+ped3FirstColumn <- "Unsafe Activities in Public Areas"
+ped4FirstColumn <- "Substance Influence"
+ped5FirstColumn <- "Other Causes Of Accidents Attributed To Pedestrians"
+
+
+# Sum the numeric columns
+Veh1CombinedNumerics <- colSums(veh1Rows[2:ncol(veh1Rows)])
+Veh2CombinedNumerics <- colSums(veh2Rows[2:ncol(veh2Rows)])
+Veh3CombinedNumerics <- colSums(veh3Rows[2:ncol(veh3Rows)])
+Veh4CombinedNumerics <- colSums(veh4Rows[2:ncol(veh4Rows)])
+Veh5CombinedNumerics <- colSums(veh5Rows[2:ncol(veh5Rows)])
+Veh6CombinedNumerics <- colSums(veh6Rows[2:ncol(veh6Rows)])
+Veh7CombinedNumerics <- colSums(veh7Rows[2:ncol(veh7Rows)])
+Veh8CombinedNumerics <- colSums(veh8Rows[2:ncol(veh8Rows)])
+Veh9CombinedNumerics <- colSums(veh9Rows[2:ncol(veh9Rows)])
+
+ped1CombinedNumerics <- colSums(ped1Rows[2:ncol(ped1Rows)])
+ped2CombinedNumerics <- colSums(ped2Rows[2:ncol(ped2Rows)])
+ped3CombinedNumerics <- colSums(ped3Rows[2:ncol(ped3Rows)])
+ped4CombinedNumerics <- colSums(ped4Rows[2:ncol(ped4Rows)])
+ped5CombinedNumerics <- colSums(ped5Rows[2:ncol(ped5Rows)])
+
+# Combine the character column with the summed numeric columns
+veh1 <- data.frame(veh1FirstColumn, t(Veh1CombinedNumerics))
+veh2 <- data.frame(veh2FirstColumn, t(Veh2CombinedNumerics))
+veh3 <- data.frame(veh3FirstColumn, t(Veh3CombinedNumerics))
+veh4 <- data.frame(veh4FirstColumn, t(Veh4CombinedNumerics))
+veh5 <- data.frame(veh5FirstColumn, t(Veh5CombinedNumerics))
+veh6 <- data.frame(veh6FirstColumn, t(Veh6CombinedNumerics))
+veh7 <- data.frame(veh7FirstColumn, t(Veh7CombinedNumerics))
+veh8 <- data.frame(veh8FirstColumn, t(Veh8CombinedNumerics))
+veh9 <- data.frame(veh9FirstColumn, t(Veh9CombinedNumerics))
+
+ped1 <- data.frame(ped1FirstColumn, t(ped1CombinedNumerics))
+ped2 <- data.frame(ped2FirstColumn, t(ped2CombinedNumerics))
+ped3 <- data.frame(ped3FirstColumn, t(ped3CombinedNumerics))
+ped4 <- data.frame(ped4FirstColumn, t(ped4CombinedNumerics))
+ped5 <- data.frame(ped5FirstColumn, t(ped5CombinedNumerics))
+
+
+# Rename the columns to keep original headers
+colnames(veh1)[1] <- colnames(data)[1]
+colnames(veh2)[1] <- colnames(data)[1]
+colnames(veh3)[1] <- colnames(data)[1]
+colnames(veh4)[1] <- colnames(data)[1]
+colnames(veh5)[1] <- colnames(data)[1]
+colnames(veh6)[1] <- colnames(data)[1]
+colnames(veh7)[1] <- colnames(data)[1]
+colnames(veh8)[1] <- colnames(data)[1]
+colnames(veh9)[1] <- colnames(data)[1]
+
+colnames(ped1)[1] <- colnames(data)[1]
+colnames(ped2)[1] <- colnames(data)[1]
+colnames(ped3)[1] <- colnames(data)[1]
+colnames(ped4)[1] <- colnames(data)[1]
+colnames(ped5)[1] <- colnames(data)[1]
+
+
+# Create an empty row with NA values
+emptyRow <- data.frame(matrix("", ncol = ncol(data), nrow = 1), stringsAsFactors = FALSE)
+colnames(emptyRow) <- colnames(veh1)
+
+# Combine everything
+finalData <- rbind(veh1, veh2, veh3, veh4, veh5, veh6, veh7, veh8, veh9, emptyRow, ped1, ped2, ped3, ped4, ped5)
+
+# Rename the columns to keep original headers
+colnames(finalData) <- colnames(data)
+
+
+# Save the modified data frame to a new CSV file
+write.csv(finalData, output_file_path, row.names = FALSE)
+
+
+
 ```
 
 You can add options to executable code like this
