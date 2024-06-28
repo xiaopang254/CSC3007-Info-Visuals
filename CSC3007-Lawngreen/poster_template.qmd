@@ -3,7 +3,7 @@ title: Number of Traffic Accidents Resulting in Injured Persons
 format:
   poster-typst: 
     size: "33x23" 
-    poster-authors: "Izz Danial Bin Selamat, Lau Jun Xiang, Low Li Pin, Mathan S/O Nanthabala, Neo Kah Siak, Samantha Lee Qiao Yu"
+    poster-authors: "Izz Danial Bin Selamat (2100735), Lau Jun Xiang (2100582), Low Li Pin (2101542), Mathan S/O Nanthabala (2100605), Neo Kah Siak(2101960), Samantha Lee Qiao Yu (2102066)"
     departments: "Information and Communication Technologies"
     institution-logo: "./images/sit-logo.png"
     footer-text: "Information Visualization 2024"
@@ -21,6 +21,7 @@ knitr:
 
 library(knitr)
 
+
 ```
 
 
@@ -36,7 +37,7 @@ Traffic accidents in Singapore have become a pressing concern in recent years, w
 #| label: fig-wsj-on-poster
 #| fig-cap: "Trend analysis of traffic accidents resulting in Injured persons by Singapore Police Force."
 #| out-width: 60%
-include_graphics("images/wsj_cropped.png")
+include_graphics("images/number-traffic-injury.png")
 ```
 
 # Initial Data Analysis
