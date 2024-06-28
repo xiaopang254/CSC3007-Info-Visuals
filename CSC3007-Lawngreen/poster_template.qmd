@@ -80,9 +80,7 @@ The initial graph depicts the number of traffic accidents resulting in injured p
 
 We used the Quarto publication framework and the R programming language, along with the following third-party packages:
 
-* *readr* for data import
-* *tidyverse* for data transformation, including *ggplot2* for visualization based on the grammar of graphics
-* *knitr* for dynamic document generation
+* *readr* for data import. *tidyverse* for data transformation, including *ggplot2* for visualization based on the grammar of graphics. *knitr* for dynamic document generation
 * *gt*, *gtExtras*, *grid*, *gridExtra*, *sparklines* for creating sparkline table
 * *patchwork* for combining overview graphs side-by-side
 * *png* to create the chart into images
