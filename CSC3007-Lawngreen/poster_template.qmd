@@ -3,7 +3,7 @@ title: Number of Traffic Accidents Resulting in Injured Persons
 format:
   poster-typst: 
     size: "33x23" 
-    poster-authors: "Izz Danial Bin Selamat (2100735), Lau Jun Xiang (2100582), Low Li Pin (2101542), Mathan S/O Nanthabala (2100605), Neo Kah Siak(2101960), Samantha Lee Qiao Yu (2102066)"
+    poster-authors: "Izz Danial Bin Selamat (2100735), Lau Jun Xiang (2100582), Low Li Pin (2101542), Mathan S/O Nanthabala (2100605), Neo Kah Siak (2101960), Samantha Lee Qiao Yu (2102066)"
     departments: "Information and Communication Technologies"
     institution-logo: "./images/sit-logo.png"
     footer-text: "Information Visualization 2024"
@@ -27,7 +27,7 @@ library(knitr)
 
 # Introduction
 
-Traffic accidents in Singapore have become a pressing concern in recent years, with a noticeable uptick in incidents since the easing of COVID-19 restrictions. Recent statistics reveal a troubling rise in injury-causing accidents, reversing a decade-long trend of declining road accidents. Lawmakers and safety experts are now scrutinising potential causes, ranging from distracted driving to the effectiveness of existing penalties under the Road Traffic Act. With road accidents increasingly capturing public attention, we aim to better visualise the causes of road accidents in hopes of aiding Singapore in implementing better measures to improve road safety through higher prevalence causes [^CNA_rising_traffic_accident]. 
+Traffic accidents in Singapore have become a pressing concern in recent years, with a noticeable uptick in incidents. Recent statistics reveal a troubling rise in injury-causing accidents, reversing a decade-long trend of declining road accidents. Lawmakers and safety experts are now scrutinising potential causes, ranging from distracted driving to the effectiveness of existing penalties under the Road Traffic Act. With road accidents increasingly capturing public attention, we aim to better visualise the causes of road accidents in hopes of aiding Singapore in implementing better measures to improve road safety through higher prevalence causes [^CNA_rising_traffic_accident]. 
 
 [^CNA_rising_traffic_accident]: R. Loh, “The big read: To tackle rising fatal traffic accidents and worsening road culture, we need to first understand the problem,” CNA, https://www.channelnewsasia.com/singapore/big-read-rising-traffic-accidents-road-culture-4328841
 
@@ -44,6 +44,53 @@ include_graphics("images/number-traffic-injury.png")
 
 The initial graph depicts the number of traffic accidents resulting in injured persons in Singapore from 2010 to 2023. It shows a general decline from 8,620 accidents in 2010 to 7,598 in 2014. However, this downward trend reverses, with fluctuations peaking at 8,304 in 2016. A significant drop was observed starting in 2019, coinciding with the onset of the COVID-19 pandemic in Singapore, with the number of accidents falling to a low of 5,476 in 2020, likely due to reduced traffic during lockdowns. Post-pandemic, there is a notable upward trend, with accidents increasing year-on-year, reaching 6,944 by 2023. This rise in traffic incidents post-2020 indicates a regression in road safety as more vehicles returned to the roads but unfortunately does not go into detail regarding the specific causes. With the introduction of PMD or similar motorised vehicles in Singapore in the early 2016s, traffic accidents no longer just include cars and motorcycles, making the data more ambiguous.
 
+# Suggested Improvements
+
+1. Instead of just showing an overview of traffic accidents over the years, splitting the dataset into two distinct main categories – accidents caused by vehicles and accidents caused by non-vehicles – allows readers to interpret and analyze the causes of traffic accidents with greater ease
+
+2. Further breaking down the main categories to display the occurrence of each type of accident would be more informative for readers
+
+3. Creation of detailed sparklines for each subcategory to show the trend in the number of such accidents over the years
+
+4. Creation of summary tables with additional context, such as minimum and maximum values, to allow readers to quickly understand the overall impact and trends without needing to interpret the sparklines alone
+
+5. Based on previous visualisation, readers might interpret that covid-19 was an attribute of the traffic accident which might be misleading since the data is solely discussing about traffic accidents resulting in injuries and have nothing related to the pandemic.
+
+6. Add labels for x-axis and y-axis in the main graph to allow readers to interpret the data more accurately
+
+
+    
+# Implementation
+
+## Data
+
+*   Data about several traffic accidents resulting in injuries can be found in the public records of the Singapore Police Force (SPF) public data. However, SPF released publicly available SingStat data only goes up from 2012 to 2022; the years 2023, 2011, and 2020 are absent [^Singstat]. We filled in the gaps with inferred information from another police report article.
+*   Records of PMD are only available after 2016.[^Record_of_PMD]
+
+[^Singstat]: <https://tablebuilder.singstat.gov.sg/table/TS/M651361>
+[^Record_of_PMD]: <https://www.police.gov.sg/-/media/4E82276DD8944CD798DCB65EEDFDCA7B.ashx>
+
+## Data Manipulation
+* The original dataset included many types of accident causes. To simplify the visualization, we categorized similar causes together and renamed them with a more general name.
+* When exporting the dataset from the website, the CSV file displayed ‘NA’ for cells that have a value of 0. Hence, we need to manipulate the cells to display 0 to reflect the original dataset
+* The original dataset’s columns were not consistent in terms of data class types. The cells under columns 2017 to 2022 have the ‘dbl’ data class whereas cells under columns 2012 to 2016 have the ‘chr’ data class. To allow for data combination, we had to mutate everything from row 1 column 2 into ‘dbl’ data class.
+* Removing of unnecessary rows 
+
+## Software
+
+We used the Quarto publication framework and the R programming language, along with the following third-party packages:
+
+* *readr* for data import
+* *tidyverse* for data transformation, including *ggplot2* for visualization based on the grammar of graphics
+* *knitr* for dynamic document generation
+* *gt*, *gtExtras*, *grid*, *gridExtra*, *sparklines* for creating sparkline table
+* *patchwork* for combining overview graphs side-by-side
+* *png* to create the chart into images
+
+
+```{=typst}
+#v(2em)
+```
 # Improved Visualisation
 
 ```{r}
@@ -58,45 +105,8 @@ knitr::include_graphics("vehicle_table.png")
 #| out-width: 100%
 knitr::include_graphics("non_vehicle_table.png")
 ```
-
-# Suggested Improvements (random for now)
-
-1.  *Add a plot title and a source note* so that the figure can be understood in
-    isolation (e.g., when shared on social media).
-1.  *Identify missing data clearly.*  Rendering unknown incidence fully
-    transparent will distinguish it from zero incidence,
-1.  *Include labels for every state.* To avoid overplotting, use two-letter
-    abbreviations instead of full state names and stagger the labels along the
-    y-axis.
-1.  *Add a title to the color legend.*
-1.  *Avoid using a rainbow color palette.* It lacks a meaningful progression
-    through color space and is not colorblind-friendly. Consider using a
-    sequential ColorBrewer palette instead.
-    
-# Implementation
-
-## Data
-
-*   Data about several traffic accidents resulting in injuries can be found in the public records of the Singapore Police Force (SPF) public data. However, SPF released publicly available SingStat data only goes up from 2012 to 2022; the years 2023, 2011, and 2020 are absent [^Singstat]. We filled in the gaps with inferred information from another police report article.
-*   Records of PMD are only available after 2016.[^Record_of_PMD]
-
-[^Singstat]: <https://tablebuilder.singstat.gov.sg/table/TS/M651361>
-[^Record_of_PMD]: <https://www.police.gov.sg/-/media/4E82276DD8944CD798DCB65EEDFDCA7B.ashx>
-
-## Software
-
-We used the Quarto publication framework and the R programming language, along with the following third-party packages:
-
-*   *readxl* for data import
-*   *tidyverse* for data transformation, including *ggplot2* for visualization
-    based on the grammar of graphics
-*   *knitr* for dynamic document generation
-
-```{=typst}
-#v(2em)
-```
-
-# Further Suggestion for Interactivity
+# Further Suggestion
+It is not possible to include interactive elements in a static poster. However, if interactivity is allowed, we can enhance our poster by giving each sparkline a hover function. Hovering on the sparkline would provide more in-depth information about each accident per year. Furthermore, the static poster could include a QR code that links to a webpage to showcase a re-enactment video of each accident. Each video would showcase the key information on how to avoid being in such a situation. This way, it would give readers more in-depth information that they can learn from.
 
 # Conclusion
 
