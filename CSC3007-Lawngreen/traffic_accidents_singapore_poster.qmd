@@ -42,7 +42,11 @@ include_graphics("images/number-traffic-injury.png")
 
 # Initial Data Analysis
 
-The initial graph depicts the number of traffic accidents resulting in injured persons in Singapore from 2010 to 2023. It shows a general decline from 8,620 accidents in 2010 to 7,598 in 2014. However, this downward trend reverses, with fluctuations peaking at 8,304 in 2016. A significant drop was observed starting in 2019, coinciding with the onset of the COVID-19 pandemic in Singapore, with the number of accidents falling to a low of 5,476 in 2020, likely due to reduced traffic during lockdowns. Post-pandemic, there is a notable upward trend, with accidents increasing year-on-year, reaching 6,944 by 2023. This rise in traffic incidents post-2020 indicates a regression in road safety as more vehicles returned to the roads but unfortunately does not go into detail regarding the specific causes. With the introduction of PMD or similar motorised vehicles in Singapore in the early 2016s, traffic accidents no longer just include cars and motorcycles, making the data more ambiguous.
+The initial graph depicts the number of traffic accidents resulting in injured persons in Singapore from 2010 to 2023. It shows a general decline from 8,620 accidents in 2010 to 7,598 in 2014. However, this downward trend reverses, with fluctuations peaking at 8,304 in 2016. A significant drop was observed starting in 2019, coinciding with the onset of the COVID-19 pandemic in Singapore, with the number of accidents falling to a low of 5,476 in 2020, likely due to reduced traffic during lockdowns. Post-pandemic, there is a notable upward trend, with accidents increasing year-on-year, reaching 6,944 by 2023. This rise in traffic incidents post-2020 indicates a regression in road safety as more vehicles returned to the roads but unfortunately does not go into detail regarding the specific causes. With the introduction of PMD or similar motorised vehicles in Singapore in the early 2016s, traffic accidents no longer just include cars and motorcycles, making the data more ambiguous.  
+
+```{=typst}
+#v(2em)
+```
 
 # Suggested Improvements
 
@@ -57,7 +61,6 @@ The initial graph depicts the number of traffic accidents resulting in injured p
 5. Based on previous visualisation, readers might interpret that covid-19 was an attribute of the traffic accident which might be misleading since the data is solely discussing about traffic accidents resulting in injuries and have nothing related to the pandemic.
 
 6. Add labels for x-axis and y-axis in the main graph to allow readers to interpret the data more accurately
-
 
     
 # Implementation
