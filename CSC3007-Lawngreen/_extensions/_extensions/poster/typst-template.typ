@@ -55,7 +55,7 @@
   title_font_size: "52",
 
   // Authors' font size (in pt).
-  authors_font_size: "20",
+  authors_font_size: "18",
 
   // Footer's URL and email font size (in pt).
   footer_url_font_size: "40",
