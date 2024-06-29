@@ -92,15 +92,15 @@ Quarto publication framework and the R programming language was used, along with
 
 ```{r}
 #| out-width: 100%
-knitr::include_graphics("overview_plot.png")
+knitr::include_graphics("traffic_accidents_singapore_prep_files/figure-html/plot-overview-graph-2.png")
+```
+```{r}
+#| out-width: 90%
+knitr::include_graphics("traffic_accidents_singapore_prep_files/figure-html/create-table-1.png")
 ```
 ```{r}
 #| out-width: 100%
-knitr::include_graphics("vehicle_table.png")
-```
-```{r}
-#| out-width: 100%
-knitr::include_graphics("non_vehicle_table.png")
+knitr::include_graphics("traffic_accidents_singapore_prep_files/figure-html/create-table-2.png")
 ```
 # Further Suggestion
 It is not possible to include interactive elements in a static poster. However, if interactivity is allowed, we can enhance our poster by giving each sparkline a hover function. Hovering on the sparkline would provide more in-depth information about each accident per year. Furthermore, the static poster could include a QR code that links to a webpage to showcase a re-enactment video of each accident. Each video would showcase the key information on how to avoid being in such a situation. This way, it would give readers more in-depth information that they can learn from.
