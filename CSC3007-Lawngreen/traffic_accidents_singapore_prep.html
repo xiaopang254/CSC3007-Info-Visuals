@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Samantha Lee Qiao Yu">
+<meta name="author" content="Izz Danial Bin Selamat">
+<meta name="author" content="Mathan S/O Nanthabala">
+<meta name="author" content="Low Li Pin">
+<meta name="author" content="Lau Jun Xiang">
+<meta name="author" content="Neo Kah Siak">
+<meta name="dcterms.date" content="2024-07-03">
+
+<title>Traffic Accidents Singapore Data Preparation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="traffic_accidents_singapore_prep_files/libs/clipboard/clipboard.min.js"></script>
+<script src="traffic_accidents_singapore_prep_files/libs/quarto-html/quarto.js"></script>
+<script src="traffic_accidents_singapore_prep_files/libs/quarto-html/popper.min.js"></script>
+<script src="traffic_accidents_singapore_prep_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="traffic_accidents_singapore_prep_files/libs/quarto-html/anchor.min.js"></script>
+<link href="traffic_accidents_singapore_prep_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="traffic_accidents_singapore_prep_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="traffic_accidents_singapore_prep_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="traffic_accidents_singapore_prep_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="traffic_accidents_singapore_prep_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Traffic Accidents Singapore Data Preparation</h1>
+<p class="subtitle lead">Team CSC3007 P1 Lawngreen</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>Samantha Lee Qiao Yu </p>
+             <p>Izz Danial Bin Selamat </p>
+             <p>Mathan S/O Nanthabala </p>
+             <p>Low Li Pin </p>
+             <p>Lau Jun Xiang </p>
+             <p>Neo Kah Siak </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 3, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="preparation-of-data-for-traffic-accidents-singapore" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Preparation of Data for Traffic Accidents Singapore</h1>
+<section id="required-packages" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="required-packages"><span class="header-section-number">1.1</span> Required packages</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to install and load a package</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>install_and_load <span class="ot">&lt;-</span> <span class="cf">function</span>(package) {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(package, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(package)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(package, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># List of required packages</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>required_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"readr"</span>, <span class="st">"dplyr"</span>, <span class="st">"tidyverse"</span>, <span class="st">"gridExtra"</span>, <span class="st">"grid"</span>, <span class="st">"gt"</span>, <span class="st">"gtExtras"</span>, <span class="st">"sparkline"</span>, <span class="st">"patchwork"</span>, <span class="st">"png"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Install and load required packages</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg <span class="cf">in</span> required_packages) {</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install_and_load</span>(pkg)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="original-data-import" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="original-data-import"><span class="header-section-number">1.2</span> Original Data Import</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the dataset</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>original_dataset <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/original_dataset.csv"</span>, <span class="at">skip =</span> <span class="dv">10</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(original_dataset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Data.Series" "X2022"       "X2021"       "X2020"       "X2019"      
+ [6] "X2018"       "X2017"       "X2016"       "X2015"       "X2014"      
+[11] "X2013"       "X2012"      </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="cleaning-and-filtering-of-necessary-data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Cleaning and Filtering of Necessary Data</h1>
+<section id="clean-data" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="clean-data"><span class="header-section-number">2.1</span> Clean Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert column headers to character type</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(original_dataset) <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="fu">colnames</span>(original_dataset))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the 'X' from column headers</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(original_dataset) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"X"</span>, <span class="st">""</span>, <span class="fu">colnames</span>(original_dataset))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the column header name for the first column</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"Category"</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert everything from row 1, column 2 onwards to double</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>original_dataset <span class="ot">&lt;-</span> original_dataset <span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">-</span><span class="dv">1</span>, as.double))</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Select rows up to row 123 (Skipped 9 rows, 121 - 9 = 112) and remove original combined rows</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># original_data &lt;- original_data[1:112,]</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>original_dataset <span class="ot">&lt;-</span> original_dataset[<span class="dv">1</span><span class="sc">:</span><span class="dv">112</span>,]</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Change NA to 0</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>original_dataset[<span class="fu">is.na</span>(original_dataset)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing fatal rows</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>original_dataset <span class="ot">&lt;-</span> original_dataset[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">53</span>),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="row-extraction" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="row-extraction"><span class="header-section-number">2.2</span> Row Extraction</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the specific rows to combine</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>veh1Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">23</span> , <span class="dv">26</span><span class="sc">:</span><span class="dv">34</span>),]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>veh2Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">14</span>,<span class="dv">31</span>,<span class="dv">32</span>),]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>veh3Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">15</span>,<span class="dv">16</span>),]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>veh4Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">30</span>),]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>veh5Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">10</span>,<span class="dv">12</span>,<span class="dv">17</span>,<span class="dv">22</span>,<span class="dv">23</span>,<span class="dv">33</span>),]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>veh6Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">18</span>,<span class="dv">26</span>),]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>veh7Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">19</span>,<span class="dv">20</span>,<span class="dv">28</span>),]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>veh8Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">21</span>,<span class="dv">27</span>,<span class="dv">29</span>),]</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>veh9Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">34</span>),]</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>ped1Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">24</span>,<span class="dv">25</span>,<span class="dv">36</span><span class="sc">:</span><span class="dv">45</span>,<span class="dv">47</span><span class="sc">:</span><span class="dv">55</span>),]</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>ped2Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">24</span>,<span class="dv">37</span>,<span class="dv">38</span>,<span class="dv">39</span>,<span class="dv">40</span>,<span class="dv">48</span>,<span class="dv">49</span>,<span class="dv">50</span>,<span class="dv">52</span>),]</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>ped3Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">25</span>,<span class="dv">36</span>,<span class="dv">41</span>,<span class="dv">44</span>,<span class="dv">47</span>,<span class="dv">51</span>,<span class="dv">54</span>),]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>ped4Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">42</span>,<span class="dv">43</span>,<span class="dv">53</span>),]</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>ped5Rows <span class="ot">&lt;-</span> original_dataset[<span class="fu">c</span>(<span class="dv">45</span>,<span class="dv">55</span>),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="creating-new-columns" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Creating New Columns</h1>
+<section id="create-char-columns" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="create-char-columns"><span class="header-section-number">3.1</span> Create Char Columns</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the first column data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>veh1FirstColumn <span class="ot">&lt;-</span> <span class="st">"Injury Accidents Attributed To Vehicles"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>veh2FirstColumn <span class="ot">&lt;-</span> <span class="st">"Improper Lane and Speed Management"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>veh3FirstColumn <span class="ot">&lt;-</span> <span class="st">"Traffic Signal Violations"</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>veh4FirstColumn <span class="ot">&lt;-</span> <span class="st">"Driving Under Influence"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>veh5FirstColumn <span class="ot">&lt;-</span> <span class="st">"Failure to Give Way"</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>veh6FirstColumn <span class="ot">&lt;-</span> <span class="st">"Improper Vehicle Control (While in Motion)"</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>veh7FirstColumn <span class="ot">&lt;-</span> <span class="st">"Reckless and Distracted Driving"</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>veh8FirstColumn <span class="ot">&lt;-</span> <span class="st">"Improper Parking and Vehicle Control (While Stationary)"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>veh9FirstColumn <span class="ot">&lt;-</span> <span class="st">"Other Causes Of Accidents Attributed To Vehicles"</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>ped1FirstColumn <span class="ot">&lt;-</span> <span class="st">"Injury Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)"</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ped2FirstColumn <span class="ot">&lt;-</span> <span class="st">"Unsafe Crossing Behaviors"</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>ped3FirstColumn <span class="ot">&lt;-</span> <span class="st">"Unsafe Activities in Public Areas"</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>ped4FirstColumn <span class="ot">&lt;-</span> <span class="st">"Substance Influence"</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>ped5FirstColumn <span class="ot">&lt;-</span> <span class="st">"Other Causes Of Accidents Attributed To Pedestrians"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="create-sum-columns" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="create-sum-columns"><span class="header-section-number">3.2</span> Create Sum Columns</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sum the numeric columns</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Veh1CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(veh1Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(veh1Rows)])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>Veh2CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(veh2Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(veh2Rows)])</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>Veh3CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(veh3Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(veh3Rows)])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>Veh4CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(veh4Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(veh4Rows)])</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>Veh5CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(veh5Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(veh5Rows)])</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>Veh6CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(veh6Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(veh6Rows)])</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>Veh7CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(veh7Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(veh7Rows)])</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>Veh8CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(veh8Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(veh8Rows)])</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>Veh9CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(veh9Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(veh9Rows)])</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ped1CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(ped1Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(ped1Rows)])</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>ped2CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(ped2Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(ped2Rows)])</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>ped3CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(ped3Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(ped3Rows)])</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>ped4CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(ped4Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(ped4Rows)])</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>ped5CombinedNumerics <span class="ot">&lt;-</span> <span class="fu">colSums</span>(ped5Rows[<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(ped5Rows)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="merging-and-renaming-columns" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Merging and Renaming Columns</h1>
+<section id="combine-char-and-sum-columns" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="combine-char-and-sum-columns"><span class="header-section-number">4.1</span> Combine Char and Sum Columns</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the character column with the summed numeric columns</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>veh1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(veh1FirstColumn, <span class="fu">t</span>(Veh1CombinedNumerics))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>veh2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(veh2FirstColumn, <span class="fu">t</span>(Veh2CombinedNumerics))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>veh3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(veh3FirstColumn, <span class="fu">t</span>(Veh3CombinedNumerics))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>veh4 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(veh4FirstColumn, <span class="fu">t</span>(Veh4CombinedNumerics))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>veh5 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(veh5FirstColumn, <span class="fu">t</span>(Veh5CombinedNumerics))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>veh6 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(veh6FirstColumn, <span class="fu">t</span>(Veh6CombinedNumerics))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>veh7 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(veh7FirstColumn, <span class="fu">t</span>(Veh7CombinedNumerics))</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>veh8 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(veh8FirstColumn, <span class="fu">t</span>(Veh8CombinedNumerics))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>veh9 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(veh9FirstColumn, <span class="fu">t</span>(Veh9CombinedNumerics))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>ped1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(ped1FirstColumn, <span class="fu">t</span>(ped1CombinedNumerics))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>ped2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(ped2FirstColumn, <span class="fu">t</span>(ped2CombinedNumerics))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>ped3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(ped3FirstColumn, <span class="fu">t</span>(ped3CombinedNumerics))</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>ped4 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(ped4FirstColumn, <span class="fu">t</span>(ped4CombinedNumerics))</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>ped5 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(ped5FirstColumn, <span class="fu">t</span>(ped5CombinedNumerics))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="rename-columns" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="rename-columns"><span class="header-section-number">4.2</span> Rename Columns</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename the columns to keep original headers</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(veh1)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(veh2)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(veh3)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(veh4)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(veh5)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(veh6)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(veh7)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(veh8)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(veh9)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ped1)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ped2)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ped3)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ped4)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ped5)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="combine-all-data" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="combine-all-data"><span class="header-section-number">4.3</span> Combine All Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine data</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>finalData <span class="ot">&lt;-</span> <span class="fu">rbind</span>(veh1, veh2, veh3, veh4, veh5, veh6, veh7, veh8, veh9, ped1, ped2, ped3, ped4, ped5)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename the columns to keep original headers</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(finalData) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(original_dataset)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print finaldata</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>finalData</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                   Category
+1                                   Injury Accidents Attributed To Vehicles
+2                                        Improper Lane and Speed Management
+3                                                 Traffic Signal Violations
+4                                                   Driving Under Influence
+5                                                       Failure to Give Way
+6                                Improper Vehicle Control (While in Motion)
+7                                           Reckless and Distracted Driving
+8                   Improper Parking and Vehicle Control (While Stationary)
+9                          Other Causes Of Accidents Attributed To Vehicles
+10 Injury Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)
+11                                                Unsafe Crossing Behaviors
+12                                        Unsafe Activities in Public Areas
+13                                                      Substance Influence
+14                      Other Causes Of Accidents Attributed To Pedestrians
+   2022 2021 2020 2019 2018 2017 2016 2015 2014 2013 2012
+1  5395 5087 3919 4699 4483 4724 6085 6534 6665 6274 6816
+2   677  661  458  690  615  733  770  876  924  815  811
+3   158  160  140  186  147  144  154  207  284  208  237
+4    98  144  100  148  164   11   31   64  103  119  115
+5   751  918  812  864  765  750 1012 1173 1123  866  898
+6  3663 2999 2273 2651 2656 2832 3796 3764 3821 3578 3947
+7    31   24   12   14   10    5    9   13   15    0    0
+8    17   11   16   22   14   26   38   33   43    0    0
+9     0  170  108  124  112  223  275  404  352  688  808
+10  429  384  328  389  376  340  346  378  426  419  439
+11  212  181  187  212  225  230  234  246  288  292  303
+12  151  144   77   73   68   21    2    8    2    2    6
+13    4    4    2    3    4    3    3    3    2    3    2
+14   62   55   62  101   79   86  107  121  134  122  128</code></pre>
+</div>
+</div>
+</section>
+<section id="output-cleaned-data" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="output-cleaned-data"><span class="header-section-number">4.4</span> Output Cleaned Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the modified data frame to a new CSV file</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(finalData, <span class="st">"../data/cleaned_dataset.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- ## Cleaned Data Import -->
+<!-- ```{r} -->
+<!-- #| label: cleaned-data-import -->
+<!-- #| message: false -->
+<!-- # Import the dataset -->
+<!-- cleaned_dataset <- read.csv("../data/cleaned_dataset.csv") -->
+<!-- colnames(cleaned_dataset) -->
+<!-- ``` -->
+<!-- # Filtering and Organizing Data Overview Data -->
+<!-- ## Extract Data -->
+<!-- ```{r} -->
+<!-- #| label: extract-data -->
+<!-- #| message: false -->
+<!-- # Function to extract data -->
+<!-- extract_data <- function(dataset, category) { -->
+<!--   dataset %>% filter(Category == category) -->
+<!-- } -->
+<!-- # Use the function to extract data -->
+<!-- vehicle_accidents <- extract_data(cleaned_dataset, "Injury Accidents Attributed To Vehicles") -->
+<!-- non_vehicle_accidents <- extract_data(cleaned_dataset, "Injury Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)") -->
+<!-- print(vehicle_accidents) -->
+<!-- print(non_vehicle_accidents) -->
+<!-- ``` -->
+<!-- ## Transform Data -->
+<!-- ```{r} -->
+<!-- #| label: transform-data -->
+<!-- #| message: false -->
+<!-- # Function to transform data -->
+<!-- transform_data <- function(data, years, is_vehicle = TRUE) { -->
+<!--   if (is_vehicle) { -->
+<!--     tibble( -->
+<!--       Year = years, -->
+<!--       Accidents = as.numeric(data[1, 2:12]) -->
+<!--     ) -->
+<!--   } else { -->
+<!--     tibble( -->
+<!--       Year = years, -->
+<!--       Accidents = colSums(data[, 2:12], na.rm = TRUE) -->
+<!--     ) -->
+<!--   } -->
+<!-- } -->
+<!-- # Extract the years from the column names -->
+<!-- years <- as.numeric(sub("X", "", names(cleaned_dataset)[2:12])) -->
+<!-- # Use the function to transform data -->
+<!-- vehicle_data <- transform_data(vehicle_accidents, years, TRUE) -->
+<!-- non_vehicle_data <- transform_data(non_vehicle_accidents, years, FALSE) -->
+<!-- print(vehicle_data) -->
+<!-- print(non_vehicle_data) -->
+<!-- ``` -->
+<!-- # Creation of the Overiew Sparkline Graphs -->
+<!-- ## Create Sparklines -->
+<!-- ```{r} -->
+<!-- #| label: create-sparklines -->
+<!-- #| message: false -->
+<!-- # Function to create and save sparklines -->
+<!-- create_sparkline <- function(data, filename) { -->
+<!--   htmlwidgets::saveWidget(sparkline(data$Accidents, type = "line"), filename, selfcontained = TRUE) -->
+<!-- } -->
+<!-- # Use the function to create sparklines -->
+<!-- create_sparkline(vehicle_data, 'vehicle_sparkline.html') -->
+<!-- create_sparkline(non_vehicle_data, 'non_vehicle_sparkline.html') -->
+<!-- ``` -->
+<!-- ## Plot Overview Graph -->
+<!-- ```{r} -->
+<!-- #| label: plot-overview-graph -->
+<!-- #| message: false -->
+<!-- # Function to create plot -->
+<!-- create_plot <- function(data, title, line_color, point_color) { -->
+<!--   ggplot(data, aes(x = Year, y = Accidents)) + -->
+<!--     geom_line(color = line_color) + -->
+<!--     geom_point(color = point_color) + -->
+<!--     scale_x_continuous(breaks = unique(data$Year)) + -->
+<!--     scale_y_continuous(n.breaks = 8) + -->
+<!--     theme_minimal() + -->
+<!--     labs( -->
+<!--       title = title, -->
+<!--       x = "Year", -->
+<!--       y = "No. of Accidents", -->
+<!--       caption = "Source: Singapore Police Force" -->
+<!--     ) + -->
+<!--     theme( -->
+<!--       plot.caption = element_text(face = "italic", hjust = 1, vjust = 1), -->
+<!--       plot.title = element_text(face = "bold", hjust = 0.5, margin = margin(b = 10)), -->
+<!--       axis.title.x = element_text(margin = margin(t = 10)), -->
+<!--       axis.title.y = element_text(margin = margin(r = 10)) -->
+<!--     ) -->
+<!-- } -->
+<!-- # Use the function to create plots -->
+<!-- vehicle_plot <- create_plot(vehicle_data, "Traffic Accidents Attributed To Vehicles", "#2F81C5", "#205988") -->
+<!-- non_vehicle_plot <- create_plot(non_vehicle_data, "Traffic Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)", "#2DA5B2", "#217E88") -->
+<!-- # Create a spacer grob -->
+<!-- spacer <- nullGrob() -->
+<!-- # Combine the two plots side by side with spacing -->
+<!-- overview_plot <- grid.arrange(vehicle_plot, spacer, non_vehicle_plot, ncol = 3, widths = c(1, 0.1, 1)) -->
+<!-- # Save the combined plot as an image -->
+<!-- ggsave("overview_plot.png", plot = overview_plot, width = 16, height = 5, dpi = 300) -->
+<!-- # Display the saved plot image -->
+<!-- grid::grid.newpage() -->
+<!-- grid::grid.raster(as.raster(png::readPNG("overview_plot.png"))) -->
+<!-- ``` -->
+<!-- # Filtering and Organizing Sub-Categories Data -->
+<!-- ## Identify Sub-Categories -->
+<!-- ```{r} -->
+<!-- #| label: identify-sub-categories -->
+<!-- #| message: false -->
+<!-- # Identify the rows for the main categories -->
+<!-- vehicles_keyword <- "Injury Accidents Attributed To Vehicles" -->
+<!-- non_vehicles_keyword <- "Injury Accidents Attributed To Non-Vehicles (Pedestrians, Cyclists, PMD)" -->
+<!-- # Find the starting indices of each category -->
+<!-- start_vehicle <- which(cleaned_dataset$Category == vehicles_keyword) -->
+<!-- start_non_vehicle <- which(cleaned_dataset$Category == non_vehicles_keyword) -->
+<!-- # Determine the ending indices of each category -->
+<!-- end_vehicle <- ifelse(length(start_non_vehicle) > 0, start_non_vehicle - 1, nrow(df)) -->
+<!-- end_non_vehicle <- nrow(cleaned_dataset) -->
+<!-- # Extract causes for vehicles from the dataset -->
+<!-- causes_vehicles <- cleaned_dataset[(start_vehicle + 1):end_vehicle, ] |> -->
+<!--   filter(!grepl(non_vehicles_keyword, Category)) |> -->
+<!--   select(Category) -->
+<!-- # Extract causes for non-vehicles from the dataset -->
+<!-- causes_non_vehicles <- cleaned_dataset[(start_non_vehicle + 1):end_non_vehicle, ] |> -->
+<!--   filter(!grepl(vehicles_keyword, Category)) |> -->
+<!--   select(Category) -->
+<!-- print(causes_vehicles) -->
+<!-- print(causes_non_vehicles) -->
+<!-- ``` -->
+<!-- ## Read in Long Format -->
+<!-- ```{r} -->
+<!-- #| label: read-in-long-format -->
+<!-- #| message: false -->
+<!-- # Select relevant columns and gather into long format -->
+<!-- df_long <- cleaned_dataset |> -->
+<!--   gather(key = "Year", value = "Accidents", -Category) |> -->
+<!--   mutate(Year = as.numeric(gsub("[^0-9]", "", Year))) -->
+<!-- # Filter the data for vehicle and non-vehicle causes -->
+<!-- df_vehicles <- df_long |> -->
+<!--   filter(Category %in% causes_vehicles$Category) -->
+<!-- df_non_vehicles <- df_long |> -->
+<!--   filter(Category %in% causes_non_vehicles$Category) -->
+<!-- print(df_vehicles) -->
+<!-- print(df_non_vehicles) -->
+<!-- ``` -->
+<!-- ## Sum Sub-Categories Data -->
+<!-- ```{r} -->
+<!-- #| label: sum-sub-categories-data -->
+<!-- #| message: false -->
+<!-- # Sum the data from 2012 to 2022 -->
+<!-- summed_vehicles <- df_vehicles |> -->
+<!--   group_by(Category) |> -->
+<!--   summarise(Sum = sum(Accidents, na.rm = TRUE)) -->
+<!-- summed_non_vehicles <- df_non_vehicles |> -->
+<!--   group_by(Category) |> -->
+<!--   summarise(Sum = sum(Accidents, na.rm = TRUE)) -->
+<!-- print(summed_vehicles) -->
+<!-- print(summed_non_vehicles) -->
+<!-- ``` -->
+<!-- # Creation of the Sub-Categories Sparkline Graphs and Tables -->
+<!-- ## Create Sparklines for Sub-Categories -->
+<!-- ```{r} -->
+<!-- #| label: create-sparklines-for-sub-categories -->
+<!-- #| message: false -->
+<!-- # Normalize the accident data for each category -->
+<!-- normalize_sparkline <- function(accidents) { -->
+<!--   min_val <- min(accidents, na.rm = TRUE) -->
+<!--   max_val <- max(accidents, na.rm = TRUE) -->
+<!--   (accidents - min_val) / (max_val - min_val) -->
+<!-- } -->
+<!-- # Function to create sparklines data -->
+<!-- create_sparkline_data <- function(df) { -->
+<!--   df |> -->
+<!--     group_by(Category) |> -->
+<!--     summarise( -->
+<!--       Sparkline = list(normalize_sparkline(Accidents)), -->
+<!--       Min = min(Accidents, na.rm = TRUE), -->
+<!--       Max = max(Accidents, na.rm = TRUE), -->
+<!--       Start = first(Accidents), -->
+<!--       End = last(Accidents), -->
+<!--       OriginalValues = list(Accidents) -->
+<!--     ) -->
+<!-- } -->
+<!-- # Create sparklines data for vehicles and non-vehicles -->
+<!-- sparklines_vehicles <- create_sparkline_data(df_vehicles) -->
+<!-- sparklines_non_vehicles <- create_sparkline_data(df_non_vehicles) -->
+<!-- # Print the exact sparkline values for verification -->
+<!-- unnested_sparklines_vehicles <- sparklines_vehicles |> -->
+<!--   unnest(cols = c(Sparkline, OriginalValues)) -->
+<!-- print(unnested_sparklines_vehicles) -->
+<!-- unnested_sparklines_non_vehicles <- sparklines_non_vehicles |> -->
+<!--   unnest(cols = c(Sparkline, OriginalValues)) -->
+<!-- print(unnested_sparklines_non_vehicles) -->
+<!-- ``` -->
+<!-- ## Create Table -->
+<!-- ```{r} -->
+<!-- #| label: create-table -->
+<!-- #| message: false -->
+<!-- # Function to create GT table with sparklines and labels -->
+<!-- create_gt_table <- function(data_table, category_label, spkl_palette, line_color) { -->
+<!--   data_table |> -->
+<!--     gt() |> -->
+<!--     cols_label( -->
+<!--       Category = category_label, -->
+<!--       Min = "Min Accidents", -->
+<!--       Max = "Max Accidents", -->
+<!--       Sparkline = "2012 to 2022", -->
+<!--       Sum = "Accidents" -->
+<!--     ) |> -->
+<!--     cols_move(c("Min", "Max"), after = "Category") |> -->
+<!--     cols_move("Sum", after = "Sparkline") |> -->
+<!--     gtExtras::gt_plt_sparkline( -->
+<!--       Sparkline, -->
+<!--       type = "shaded", -->
+<!--       label = FALSE, -->
+<!--       palette = spkl_palette -->
+<!--     ) |> -->
+<!--     text_transform( -->
+<!--       locations = cells_body(columns = Sparkline), -->
+<!--       fn = function(x) { -->
+<!--         lapply(seq_along(x), function(i) { -->
+<!--           paste0( -->
+<!--             "<div style='display: flex; justify-content: space-between; color: ", line_color, ";'>", -->
+<!--             "<span>", data_table$Start[i], "</span>", -->
+<!--             x[i], -->
+<!--             "<span>", data_table$End[i], "</span>", -->
+<!--             "</div>" -->
+<!--           ) -->
+<!--         }) -->
+<!--       } -->
+<!--     ) |> -->
+<!--     tab_style( -->
+<!--       style = cell_text(size = px(10)), -->
+<!--       locations = cells_body(columns = Sparkline) -->
+<!--     ) |> -->
+<!--     tab_style( -->
+<!--       style = cell_text(weight = "bold"), -->
+<!--       locations = cells_column_labels(everything()) -->
+<!--     ) |> -->
+<!--     tab_options( -->
+<!--       table.width = pct(100) -->
+<!--     ) |> -->
+<!--     cols_hide(columns = c(Start, End, OriginalValues)) -->
+<!-- } -->
+<!-- # Combine summed data and sparklines for vehicles -->
+<!-- vehicles_table <- left_join(summed_vehicles, sparklines_vehicles, by = "Category") -->
+<!-- # Combine summed data and sparklines for non-vehicles -->
+<!-- non_vehicles_table <- left_join(summed_non_vehicles, sparklines_non_vehicles, by = "Category") -->
+<!-- # Define sparkline palettes and line colors -->
+<!-- spkl_palette_vehicle <- c("#2F81C5", "#205988", "orange", "red", "lightblue") -->
+<!-- spkl_palette_non_vehicle <- c("#2DA5B2", "#217E88", "orange", "red", "lightblue") -->
+<!-- # Create GT tables -->
+<!-- gt_table_vehicles <- create_gt_table(vehicles_table, "Vehicle Causes", spkl_palette_vehicle, "#205988") -->
+<!-- gt_table_non_vehicles <- create_gt_table(non_vehicles_table, "Non-Vehicle Causes", spkl_palette_non_vehicle, "#217E88") -->
+<!-- # Save tables as images -->
+<!-- gtsave(gt_table_vehicles, "vehicle_table.png") -->
+<!-- gtsave(gt_table_non_vehicles, "non_vehicle_table.png") -->
+<!-- # Display images separately -->
+<!-- grid::grid.newpage() -->
+<!-- grid::grid.raster(as.raster(png::readPNG("vehicle_table.png"))) -->
+<!-- grid::grid.newpage() -->
+<!-- grid::grid.raster(as.raster(png::readPNG("non_vehicle_table.png"))) -->
+<!-- ``` -->
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
