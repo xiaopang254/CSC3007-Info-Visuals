@@ -357,7 +357,7 @@ spacer <- nullGrob()
 
 # Create the main title grob with line break and bold font
 main_title <- textGrob(
-  bquote(atop(bold("Number of Traffic Accidents Resulting in"), bold("Injured Persons Attributed To"))),
+  bquote(atop(bold("Number of Traffic Accidents Resulting in"), bold("Injured Persons Attributed to"))),
   gp = gpar(fontsize = 24)
 )
 
