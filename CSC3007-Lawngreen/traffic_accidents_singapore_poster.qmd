@@ -95,7 +95,7 @@ Quarto publication framework and the R programming language was used, along with
 knitr::include_graphics("images/overview_plot.png")
 ```
 ```{r}
-#| out-width: 90%
+#| out-width: 100%
 knitr::include_graphics("images/vehicle_table.png")
 ```
 ```{r}
