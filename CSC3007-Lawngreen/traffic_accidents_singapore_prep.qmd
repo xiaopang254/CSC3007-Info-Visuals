@@ -288,7 +288,7 @@ transform_data <- function(data, years, is_vehicle = TRUE) {
   } else {
     tibble(
       Year = years,
-      Accidents = colSums(data[, 2:12], na.rm = TRUE)
+      Accidents = as.numeric(data)
     )
   }
 }
@@ -298,8 +298,9 @@ years <- as.numeric(sub("X", "", names(cleaned_dataset)[2:12]))
 
 # Use the function to transform data
 vehicle_data <- transform_data(vehicle_accidents, years, TRUE)
-non_vehicle_data <- transform_data(non_vehicle_accidents, years, FALSE)
+non_vehicle_data <- transform_data(non_vehicle_accidents[1, 2:12], years, FALSE)
 
+# Print data to verify
 print(vehicle_data)
 print(non_vehicle_data)
 ```
@@ -311,14 +312,9 @@ print(non_vehicle_data)
 #| label: create-sparklines
 #| message: false
 
-# Function to create and save sparklines
-create_sparkline <- function(data, filename) {
-  htmlwidgets::saveWidget(sparkline(data$Accidents, type = "line"), filename, selfcontained = TRUE)
-}
-
-# Use the function to create sparklines
-create_sparkline(vehicle_data, 'images/vehicle_sparkline.html')
-create_sparkline(non_vehicle_data, 'images/non_vehicle_sparkline.html')
+# Display the sparklines
+sparkline(vehicle_data$Accidents, type = "line", width = "100%", height = "100px")
+sparkline(non_vehicle_data$Accidents, type = "line", width = "100%", height = "100px")
 ```
 
 
