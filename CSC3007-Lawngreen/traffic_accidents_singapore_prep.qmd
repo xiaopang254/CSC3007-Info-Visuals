@@ -52,7 +52,7 @@ for (pkg in required_packages) {
 #| message: false
 
 # Import the dataset
-original_dataset <- read.csv("../data/original_dataset.csv", skip = 10)
+original_dataset <- read.csv("original_dataset.csv", skip = 10)
 colnames(original_dataset)
 ```
 
@@ -234,7 +234,7 @@ finalData
 #| message: false
 
 # Save the modified data frame to a new CSV file
-write.csv(finalData, "../data/cleaned_dataset.csv", row.names = FALSE)
+write.csv(finalData, "cleaned_dataset.csv", row.names = FALSE)
 ```
 
 
@@ -247,7 +247,7 @@ write.csv(finalData, "../data/cleaned_dataset.csv", row.names = FALSE)
 #| message: false
 
 # Import the dataset
-cleaned_dataset <- read.csv("../data/cleaned_dataset.csv")
+cleaned_dataset <- read.csv("cleaned_dataset.csv")
 colnames(cleaned_dataset)
 ```
 
