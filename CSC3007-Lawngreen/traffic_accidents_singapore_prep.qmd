@@ -332,36 +332,12 @@ create_plot <- function(data, title, line_color, point_color, text_height, arrow
     geom_point(color = point_color, size = 2.2) +
     geom_label_repel(
       aes(label = Accidents), 
-      size = 3.3, 
+      size = 3, 
       label.padding = unit(0.2, "lines"), 
-      nudge_y = ifelse(data$Year == 2020, 0, label_height),
-      nudge_x = ifelse(data$Year == 2020, -0.1, 0),
+      nudge_y = label_height,
       fill = line_color,
       color = "white",
-      fontface = "bold",
-      box.padding = 0.3, 
-      point.padding = 0.2,
-      max.overlaps = 10
-    ) +
-    annotate(
-      "text", 
-      x = 2020, 
-      y = y_2020 + text_height, 
-      label = "Start of Covid-19\nin Singapore", 
-      hjust = 0.5, 
-      size = 4, 
-      color = "red", 
       fontface = "bold"
-    ) +
-    annotate(
-      "segment", 
-      x = 2020, 
-      xend = 2020, 
-      y = y_2020, 
-      yend = y_2020 + arrow_height, 
-      color = "red", 
-      arrow = arrow(length = unit(0.3, "cm"), type = "closed", angle = 15), 
-      size = 0.6
     ) +
     scale_x_continuous(breaks = unique(data$Year)) +
     scale_y_continuous(n.breaks = 8) +
@@ -383,8 +359,8 @@ create_plot <- function(data, title, line_color, point_color, text_height, arrow
 }
 
 # Use the function to create plots
-vehicle_plot <- create_plot(vehicle_data, "Vehicles", "#2F81C5", "#205988", 1580, 1280, 8)
-non_vehicle_plot <- create_plot(non_vehicle_data, "Non-Vehicles (Pedestrians, Cyclists, PMD)", "#2DA5B2", "#217E88", 78, 68, 0.5)
+vehicle_plot <- create_plot(vehicle_data, "Vehicles", "#2F81C5", "#205988", 1580, 1280, 15)
+non_vehicle_plot <- create_plot(non_vehicle_data, "Non-Vehicles (Pedestrians, Cyclists, PMD)", "#2DA5B2", "#217E88", 78, 68, 3)
 
 # Create a spacer grob
 spacer <- nullGrob()
