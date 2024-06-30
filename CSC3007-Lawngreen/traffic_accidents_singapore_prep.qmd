@@ -36,7 +36,7 @@ install_and_load <- function(package) {
 }
 
 # List of required packages
-required_packages <- c("readr", "dplyr", "tidyverse", "gridExtra", "grid", "gt", "gtExtras", "sparkline", "patchwork", "png")
+required_packages <- c("readr", "dplyr", "tidyverse", "gridExtra", "grid", "gt", "gtExtras", "ggrepel", "sparkline", "patchwork", "png")
 
 # Install and load required packages
 for (pkg in required_packages) {
@@ -325,10 +325,44 @@ sparkline(non_vehicle_data$Accidents, type = "line", width = "100%", height = "1
 #| message: false
 
 # Function to create plot
-create_plot <- function(data, title, line_color, point_color) {
+create_plot <- function(data, title, line_color, point_color, text_height, arrow_height, label_height) {
+  y_2020 <- data$Accidents[data$Year == 2020]
   ggplot(data, aes(x = Year, y = Accidents)) +
-    geom_line(color = line_color) +
-    geom_point(color = point_color) +
+    geom_line(color = line_color, size = 1.2) +
+    geom_point(color = point_color, size = 2.2) +
+    geom_label_repel(
+      aes(label = Accidents), 
+      size = 3.3, 
+      label.padding = unit(0.2, "lines"), 
+      nudge_y = ifelse(data$Year == 2020, 0, label_height),
+      nudge_x = ifelse(data$Year == 2020, -0.1, 0),
+      fill = line_color,
+      color = "white",
+      fontface = "bold",
+      box.padding = 0.3, 
+      point.padding = 0.2,
+      max.overlaps = 10
+    ) +
+    annotate(
+      "text", 
+      x = 2020, 
+      y = y_2020 + text_height, 
+      label = "Start of Covid-19\nin Singapore", 
+      hjust = 0.5, 
+      size = 4, 
+      color = "red", 
+      fontface = "bold"
+    ) +
+    annotate(
+      "segment", 
+      x = 2020, 
+      xend = 2020, 
+      y = y_2020, 
+      yend = y_2020 + arrow_height, 
+      color = "red", 
+      arrow = arrow(length = unit(0.3, "cm"), type = "closed", angle = 15), 
+      size = 0.6
+    ) +
     scale_x_continuous(breaks = unique(data$Year)) +
     scale_y_continuous(n.breaks = 8) +
     theme_minimal() +
@@ -349,8 +383,8 @@ create_plot <- function(data, title, line_color, point_color) {
 }
 
 # Use the function to create plots
-vehicle_plot <- create_plot(vehicle_data, "Vehicles", "#2F81C5", "#205988")
-non_vehicle_plot <- create_plot(non_vehicle_data, "Non-Vehicles (Pedestrians, Cyclists, PMD)", "#2DA5B2", "#217E88")
+vehicle_plot <- create_plot(vehicle_data, "Vehicles", "#2F81C5", "#205988", 1580, 1280, 8)
+non_vehicle_plot <- create_plot(non_vehicle_data, "Non-Vehicles (Pedestrians, Cyclists, PMD)", "#2DA5B2", "#217E88", 78, 68, 0.5)
 
 # Create a spacer grob
 spacer <- nullGrob()
@@ -522,9 +556,9 @@ create_gt_table <- function(data_table, category_label, spkl_palette, line_color
         lapply(seq_along(x), function(i) {
           paste0(
             "<div style='display: flex; justify-content: space-between; color: ", line_color, ";'>",
-            "<span>", data_table$Start[i], "</span>",
+            "<span style='font-weight: bold'>", data_table$Start[i], "</span>",
             x[i],
-            "<span>", data_table$End[i], "</span>",
+            "<span style='font-weight: bold'>", data_table$End[i], "</span>",
             "</div>"
           )
         })
@@ -551,8 +585,8 @@ vehicles_table <- left_join(summed_vehicles, sparklines_vehicles, by = "Category
 non_vehicles_table <- left_join(summed_non_vehicles, sparklines_non_vehicles, by = "Category")
 
 # Define sparkline palettes and line colors
-spkl_palette_vehicle <- c("#2F81C5", "#205988", "orange", "red", "lightblue")
-spkl_palette_non_vehicle <- c("#2DA5B2", "#217E88", "orange", "red", "lightblue")
+spkl_palette_vehicle <- c("#2F81C5", "#205988", "darkorange", "red", "lightblue")
+spkl_palette_non_vehicle <- c("#2DA5B2", "#217E88", "darkorange", "red", "lightblue")
 
 # Create GT tables
 gt_table_vehicles <- create_gt_table(vehicles_table, "Vehicle Causes", spkl_palette_vehicle, "#205988")
