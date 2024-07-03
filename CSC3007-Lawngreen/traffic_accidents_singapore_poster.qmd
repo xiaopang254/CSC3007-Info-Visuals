@@ -67,7 +67,7 @@ The initial graph depicts the number of traffic accidents resulting in injured p
 
 ## Data
 
-*   Data about several traffic accidents resulting in injuries can be found in the public records of the Singapore Police Force (SPF) public data. However, SPF released publicly available SingStat data only goes up from 2012 to 2022; the years 2023, 2011, and 2020 are absent [^Singstat]. We filled in the gaps with inferred information from another police report article. Records of PMD are only available after 2016.[^Record_of_PMD]
+*   Data about several traffic accidents resulting in injuries can be found in the public records of the Singapore Police Force (SPF) public data. However, SPF released publicly available SingStat data only goes up from 2012 to 2022; the years 2023, 2011, and 2020 are absent [^Singstat].
 
 [^Singstat]: <https://tablebuilder.singstat.gov.sg/table/TS/M651361>
 [^Record_of_PMD]: <https://www.police.gov.sg/-/media/4E82276DD8944CD798DCB65EEDFDCA7B.ashx>
@@ -84,7 +84,10 @@ The initial graph depicts the number of traffic accidents resulting in injured p
 
 Quarto publication framework and the R programming language was used, along with the following third-party packages:
 
-* *readr* for data import. *tidyverse* for data transformation, including *ggplot2* for visualization based on the grammar of graphics. *knitr* for dynamic document generation. *patchwork* for combining overview graphs side-by-side.
+* *readr* for data import. *tidyverse* for data transformation
+* *ggplot2* for visualization based on the grammar of graphics. 
+* *knitr* for dynamic document generation. 
+* *patchwork* for combining overview graphs side-by-side.
 * *gt*, *gtExtras*, *grid*, *gridExtra*, *sparklines* for creating sparkline table.
 
 
