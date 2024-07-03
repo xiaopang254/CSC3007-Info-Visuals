@@ -75,7 +75,7 @@ The initial graph depicts the number of traffic accidents resulting in injured p
 * The original dataset included multiple accident causes so we categorized similar causes together and renamed them with a more general name.
 * When exporting the dataset, the CSV file displayed ‘NA’ for cells that have a value of 0. Hence, we manipulated the cells to display 0 to reflect the original dataset
 * Original dataset’s columns were not consistent in terms of data class types. Cells under columns 2017 to 2022 have the ‘dbl’ data class whereas cells under columns 2012 to 2016 have the ‘chr’ data class. We had to mutate everything from row 1 and column 2 into ‘dbl’ data class to allow for data combination.
-* Unnecessary rows were removed. The first column was combined with their new respective columns
+* Unnecessary rows were removed.
 * Row 1 data were renamed to keep the original headers. All new data frames were combined into a single data frame, ‘finalData’, using rbind.
 
 
