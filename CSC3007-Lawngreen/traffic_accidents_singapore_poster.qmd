@@ -58,7 +58,7 @@ The initial graph depicts the number of traffic accidents resulting in injured p
 
 4. Creation of summary tables with additional context, such as minimum and maximum values, to allow readers to quickly understand the overall impact and trends without needing to interpret the sparklines alone
 
-5. Based on previous visualisation, readers might interpret that covid-19 was an attribute of the traffic accident which might be misleading since the data is solely discussing about traffic accidents resulting in injuries and have nothing related to the pandemic.
+5. Removing the 'start of Covid-19' label to prevent confusion since the data only covers traffic accidents with injuries and is not related to the pandemic.
 
 6. Add labels for x-axis and y-axis in the main graph to allow readers to interpret the data more accurately
 
