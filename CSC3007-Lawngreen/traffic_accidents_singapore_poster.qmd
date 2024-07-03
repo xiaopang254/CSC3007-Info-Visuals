@@ -67,7 +67,7 @@ The initial graph depicts the number of traffic accidents resulting in injured p
 
 ## Data
 
-*   Data about several traffic accidents resulting in injuries can be found in the public records of the Singapore Police Force (SPF) public data. However, SPF released publicly available SingStat data only goes up from 2012 to 2022; the years 2023, 2011, and 2020 are absent [^Singstat].
+*   Data about several traffic accidents resulting in injuries can be found in the public records of the Singapore Police Force (SPF) public data. However, SPF released publicly available SingStat data only goes up from 2012 to 2022; the years 2010, 2011, and 2023 are absent. As a result, we reduced the dataset's year range to match the original dataset. [^Singstat].
 
 [^Singstat]: <https://tablebuilder.singstat.gov.sg/table/TS/M651361>
 [^Record_of_PMD]: <https://www.police.gov.sg/-/media/4E82276DD8944CD798DCB65EEDFDCA7B.ashx>
